@@ -1,0 +1,39 @@
+version: '3'
+services:
+  ui-nginx:
+    build:
+      context: ./ui/docker
+      dockerfile: nginx.docker
+    volumes:
+      - ./ui:/var/www/ui
+    ports:
+      - "8080:80"
+  ui-nodejs:
+    image: node:lts
+    volumes:
+      - ./ui:/var/www/ui
+    working_dir: /var/www/ui
+    tty: true # process always running at background
+
+  api-nginx:
+    build:
+      context: ./api/docker
+      dockerfile: nginx.docker
+    volumes:
+      - ./api:/var/www/api
+    ports:
+      - "8081:80"
+  api-php-fpm:
+    build:
+      context: ./api/docker
+      dockerfile: php-fpm.docker
+    volumes:
+      - ./api:/var/www/api
+  api-php-cli:
+    build:
+      context: ./api/docker
+      dockerfile: php-cli.docker
+    volumes:
+      - ./api:/var/www/api
+    working_dir: /var/www/api
+    tty: true
